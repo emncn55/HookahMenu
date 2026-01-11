@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hookah_menu/components/category_tile.dart';
+import 'package:hookah_menu/components/filter_bottom_sheet.dart';
 import 'package:hookah_menu/components/mix_card.dart';
 import 'package:hookah_menu/models/category_data.dart';
 import 'package:hookah_menu/models/mix_data.dart';
 import 'package:hookah_menu/models/mix_model.dart';
 import 'package:hookah_menu/pages/all_mixes_page.dart';
-import 'package:hookah_menu/pages/fav_mixes_page.dart';
+import 'package:hookah_menu/pages/filter_result_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +17,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String selectedCategory = "";
+  String searchText = "";
+  List<MixModel> visibleMixes = [];
+  String? selectedTobacco;
+  int? selectedIntensity;
+  List<MixModel> filteredMixes = [];
+  @override
+  void initState() {
+    super.initState();
+    visibleMixes = mixes;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +87,19 @@ class _HomePageState extends State<HomePage> {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: TextField(
+                                  onChanged: (value) {
+                                    setState(() {
+                                      searchText = value.toLowerCase();
+                                      visibleMixes = mixes.where((mix) {
+                                        final mixName = mix.name.toLowerCase();
+                                        final flavor = mix.description
+                                            .toLowerCase();
+
+                                        return mixName.contains(searchText) ||
+                                            flavor.contains(searchText);
+                                      }).toList();
+                                    });
+                                  },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText:
@@ -103,7 +127,44 @@ class _HomePageState extends State<HomePage> {
                             Icons.filter_list,
                             color: Colors.grey,
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            final result = await showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => const FilterBottomSheet(),
+                            );
+
+                            if (result == null) return;
+
+                            final String? tobacco = result["tobacco"];
+                            final int? intensity = result["intensity"];
+
+                            if (tobacco == null || intensity == null) return;
+
+                            final List<MixModel> filteredMixes = mixes.where((
+                              mix,
+                            ) {
+                              final tobaccoMatch =
+                                  mix.mixTobaccoType.toLowerCase() ==
+                                  tobacco.toLowerCase();
+
+                              final intensityMatch = mix.intensity == intensity;
+
+                              return tobaccoMatch && intensityMatch;
+                            }).toList();
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FilterResultPage(
+                                  results: filteredMixes,
+                                  tobacco: tobacco,
+                                  intensity: intensity,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -145,13 +206,39 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AllMixesPage(),
+                            builder: (_) => const AllMixesPage(),
                           ),
                         );
-                      } else {
-                        setState(() {
-                          selectedCategory = category['name']!.toUpperCase();
-                        });
+                      }
+
+                      if (category['name'] == "Dark") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const AllMixesPage(tobaccoType: "Dark"),
+                          ),
+                        );
+                      }
+
+                      if (category['name'] == "Blonde") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const AllMixesPage(tobaccoType: "Blonde"),
+                          ),
+                        );
+                      }
+
+                      if (category['name'] == "Cigar") {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const AllMixesPage(tobaccoType: "Cigar"),
+                          ),
+                        );
                       }
                     },
                     child: CategoryTile(
@@ -163,34 +250,36 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 15),
-
-            // Öne Çıkanlar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Öne Çıkanlar',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const FavMixesPage(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Tümünü Gör',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
+            if (searchText.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                'Arama Sonuçları',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              visibleMixes.isEmpty
+                  ? const Text("Sonuç bulunamadı")
+                  : GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: visibleMixes.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 3.5,
+                          ),
+                      itemBuilder: (context, index) {
+                        return MixCard(mix: visibleMixes[index]);
+                      },
                     ),
-                  ),
-                ),
-              ],
+              const SizedBox(height: 20),
+            ],
+            // Öne Çıkanlar
+            Text(
+              'Öne Çıkanlar',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 7),
             SizedBox(
@@ -199,8 +288,7 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 itemCount: hotMixes.length,
                 itemBuilder: (context, index) {
-                  final mix = hotMixes[index];
-                  return MixCard(mix: mix);
+                  return MixCard(mix: hotMixes[index]);
                 },
               ),
             ),
@@ -248,54 +336,6 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.orange[800],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Yeni Gelenler
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text("Yeni Gelenler"),
-                        content: Text(
-                          "Son eklenen karışımlar:\n"
-                          "- Tropikal Passion Mix\n"
-                          "- Peach Mango Delight\n"
-                          "- Pink Citrus Twist\n\n"
-                          "Her hafta yeni tatlar ekleniyor!",
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text("Kapat"),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 12),
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.green[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(Icons.new_releases, color: Colors.green),
-                        const SizedBox(height: 6),
-                        Text(
-                          "Yeni Gelenler",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green[800],
                           ),
                           textAlign: TextAlign.center,
                         ),

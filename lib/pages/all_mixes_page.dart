@@ -3,24 +3,27 @@ import 'package:hookah_menu/models/mix_data.dart';
 import 'package:hookah_menu/models/mix_model.dart';
 
 class AllMixesPage extends StatelessWidget {
-  const AllMixesPage({super.key});
+  final String? tobaccoType;
+  // Eğer tobaccoType null ise tüm mixler gösterilir, değilse sadece o türe ait mixler gösterilir.
+  const AllMixesPage({super.key, this.tobaccoType});
 
   @override
   Widget build(BuildContext context) {
-    final List<MixModel> mixList = mixes;
+    final List<MixModel> mixList = tobaccoType == null
+        ? mixes
+        : mixes.where((mix) => mix.mixTobaccoType == tobaccoType).toList();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(150),
         child: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          centerTitle: false,
           flexibleSpace: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
                     'Nargile Karışım Menü',
@@ -32,70 +35,38 @@ class AllMixesPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    "Tüm mixler",
+                    tobaccoType == null ? "Tüm mixler" : "$tobaccoType Mixler",
                     style: TextStyle(fontSize: 15, color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 15),
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.grey[300],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.home_outlined, color: Colors.grey[600]),
-                          SizedBox(width: 5),
-                          Text(
-                            "Ana Sayfa",
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Row(
-                        children: const [
-                          Text("Filtreler", style: TextStyle(fontSize: 16)),
-                          SizedBox(width: 5),
-                          Icon(Icons.filter_list),
-                        ],
-                      ),
-                    ],
-                  ),
+                  Container(height: 1, color: Colors.grey[300]),
                 ],
               ),
             ),
           ),
         ),
       ),
-      body: Container(
-        color: Colors.white,
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 15),
-              child: Row(
-                children: [
-                  const Text(
-                    "Tüm mixler",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Text(
+                  tobaccoType == null ? "Tüm mixler" : "$tobaccoType Mixler",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Spacer(),
-                  Text(
-                    "${mixList.length} sonuç",
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                  ),
-                ],
-              ),
+                ),
+                const Spacer(),
+                Text(
+                  "${mixList.length} sonuç",
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+              ],
             ),
-
+            const SizedBox(height: 12),
             Expanded(
               child: ListView.builder(
                 itemCount: mixList.length,
@@ -120,33 +91,19 @@ class AllMixesPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          mix.description,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          mix.mixType,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blueGrey[800],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
+                        Text(mix.description),
+                        const SizedBox(height: 6),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              mix.mixTobaccoType,
-                              style: const TextStyle(fontSize: 14),
-                            ),
+                            Text(mix.mixTobaccoType),
                             Row(
                               children: List.generate(
-                                mix.intensity.toInt(),
-                                (index) => const Icon(
+                                mix.intensity,
+                                (i) => const Icon(
                                   Icons.local_fire_department,
-                                  color: Colors.red,
                                   size: 16,
+                                  color: Colors.red,
                                 ),
                               ),
                             ),

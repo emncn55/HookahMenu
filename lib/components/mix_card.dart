@@ -7,100 +7,93 @@ class MixCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 12),
-      child: Container(
-        width: 300,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              blurRadius: 6,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Mix Name
-                  Text(
-                    mix.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 4)),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // 🔴 KRİTİK
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Mix adı
+                Text(
+                  mix.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                /// Açıklama
+                Text(
+                  mix.description,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                ),
+
+                const SizedBox(height: 12),
+
+                /// Etiketler
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[400],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        mix.mixTobaccoType,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  // Description
-                  Text(
-                    mix.description,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  const Spacer(),
-
-                  // Tobacco Type + Intensity
-                  Row(
-                    children: [
-                      // Tobacco type tag
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[300],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          mix.mixTobaccoType,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red[400],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        "Yoğunluk ${mix.intensity}",
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-
-                      const SizedBox(width: 8),
-
-                      // Intensity tag
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red[400],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          mix.mixType,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
+          ),
 
-            // "Öne çıkan" label
+          /// Öne çıkan etiketi
+          if (mix.intensity >= 7)
             Positioned(
               top: 8,
               right: 8,
@@ -121,18 +114,17 @@ class MixCard extends StatelessWidget {
               ),
             ),
 
-            // Ateş ikonu
-            Positioned(
-              bottom: 8,
-              right: 8,
-              child: const Icon(
-                Icons.local_fire_department,
-                color: Colors.orange,
-                size: 20,
-              ),
+          /// Ateş ikonu
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: const Icon(
+              Icons.local_fire_department,
+              color: Colors.orange,
+              size: 18,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
