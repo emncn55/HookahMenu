@@ -268,7 +268,7 @@ class _HomePageState extends State<HomePage> {
                             crossAxisCount: 2,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
-                            childAspectRatio: 3.5,
+                            childAspectRatio: 2.6,
                           ),
                       itemBuilder: (context, index) {
                         return MixCard(mix: visibleMixes[index]);
@@ -283,16 +283,22 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 7),
             SizedBox(
-              height: 193,
+              height: 260,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: hotMixes.length,
                 itemBuilder: (context, index) {
-                  return MixCard(mix: hotMixes[index]);
+                  return SizedBox(
+                    width: 280, // 🔥 kart genişliği
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: MixCard(mix: hotMixes[index]),
+                    ),
+                  );
                 },
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
 
             // Küçük bilgilendirici alanlar - alt alta
             Column(

@@ -71,20 +71,19 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           const Text("Yoğunluk", style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
 
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: List.generate(10, (index) {
               final value = index + 1;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: ChoiceChip(
-                  label: Text(value.toString()),
-                  selected: selectedIntensity == value,
-                  onSelected: (_) {
-                    setState(() {
-                      selectedIntensity = value;
-                    });
-                  },
-                ),
+              final isSelected = selectedIntensity == value;
+
+              return ChoiceChip(
+                label: Text(value.toString()),
+                selected: isSelected,
+                onSelected: (_) {
+                  setState(() => selectedIntensity = value);
+                },
               );
             }),
           ),
