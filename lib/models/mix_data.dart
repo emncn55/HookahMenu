@@ -169,4 +169,111 @@ List<MixModel> mixes = [
     mixWeight: 6,
     similarMixes: [],
   ),
+  MixModel(
+    id: "paradise_red_hood_cookie_milk",
+    name: "Paradise Red Hood Cookie Milk",
+    description: "Tatlı ve meyvemsi aromaların sütlü ve yumuşak bir karışımı.",
+    ingredients: {
+      "Musthave Paradise": 0.25,
+      "Satyr Red Hood": 0.25,
+      "Spectrum Cookie Milk": 0.50,
+    },
+    intensity: 6,
+    isFavorite: false,
+    mixType: "Pastane",
+    mixTobaccoType: "Dark",
+    mixWeight: 6,
+    similarMixes: [],
+  ),
+
+  MixModel(
+    id: "griffinberry_yuzu_orange_ananas",
+    name: "Griffinberry Yuzu Fusion",
+    description:
+        "Berry, narenciye ve tropikal ananas aromalarının ferah karışımı.",
+    ingredients: {
+      "Satyr Griffinberry": 0.30,
+      "Deus Yuzu": 0.20,
+      "Musthave Orange Team": 0.20,
+      "Satyr Ananas": 0.20,
+    },
+    intensity: 6,
+    isFavorite: false,
+    mixType: "Meyveli",
+    mixTobaccoType: "Dark",
+    mixWeight: 6,
+    similarMixes: [],
+  ),
+
+  MixModel(
+    id: "cookies_whiskey_bauah",
+    name: "Cookies & Whiskey",
+    description:
+        "Tatlı kurabiye notalarıyla harmanlanmış yoğun ve karakterli bir whiskey dokunuşu.",
+    ingredients: {
+      "Trofimoffs Cookies": 0.40,
+      "Bonche Whiskey": 0.20,
+      "Overdose Bauah": 0.40,
+    },
+    intensity: 8,
+    isFavorite: false,
+    mixType: "Pastane",
+    mixTobaccoType: "Cigar",
+    mixWeight: 6,
+    similarMixes: [],
+  ),
+
+  MixModel(
+    id: "orange_team_blossom_guinness",
+    name: "Orange Blossom Guinness",
+    description:
+        "Narenciye tatlılığı ile Guinness aromalarının dengeli birleşimi.",
+    ingredients: {
+      "Musthave Orange Team": 0.50,
+      "Deus Orange Blossom": 0.20,
+      "Deus Guinness": 0.30,
+    },
+    intensity: 4,
+    isFavorite: false,
+    mixType: "Citrus",
+    mixTobaccoType: "Blonde",
+    mixWeight: 6,
+    similarMixes: [],
+  ),
+
+  MixModel(
+    id: "caribbean_banano_brownie",
+    name: "Caribbean Banana Brownie",
+    description:
+        "Karayip tütünü, muz ve brownie aromalarının yoğun ve tatlı uyumu.",
+    ingredients: {
+      "Morpheus Caribbean Tobacco": 0.30,
+      "Overdose Black Banano": 0.20,
+      "Satyr Brownie": 0.50,
+    },
+    intensity: 6,
+    isFavorite: false,
+    mixType: "Pastane",
+    mixTobaccoType: "Dark",
+    mixWeight: 6,
+    similarMixes: [],
+  ),
+
+  MixModel(
+    id: "queen_of_persia_margarita_yuzu",
+    name: "Persian Margarita",
+    description:
+        "Egzotik ve ferah aromaların narenciye ağırlıklı canlı karışımı.",
+    ingredients: {
+      "Satyr Queen of Persia": 0.50,
+      "Satyr Margarita": 0.30,
+      "Deus Yuzu": 0.20,
+    },
+    intensity: 6,
+    isFavorite: false,
+    mixType: "Meyveli",
+    mixTobaccoType: "Dark",
+    mixWeight: 6,
+    similarMixes: [],
+  ),
 ];
